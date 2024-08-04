@@ -2,6 +2,11 @@
 
 TwitterOpenAPI is a Node.js application that uses the Rettiwt API to fetch and display Twitter data. The application provides various endpoints to search for tweets, get user profile information, and generate RSS feeds for the latest tweets.
 
+## Notice
+
+Currently pushed code is just initial code. We will be updating improved version of the documentation and code soon.
+Milestones also will be added soon. Feel free to contribute.
+
 ## Table of Contents
 
 - [Installation](#installation)
