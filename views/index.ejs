@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            <%= title %>
+        </title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magic-ui/1.0.0/magic-ui.min.css">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f4;
+            }
+
+            .container {
+                max-width: 800px;
+                margin: 50px auto;
+                padding: 20px;
+                background-color: #fff;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            h1 {
+                text-align: center;
+                color: #333;
+            }
+
+            p {
+                text-align: center;
+                color: #666;
+            }
+
+            ul {
+                list-style-type: none;
+                padding: 0;
+            }
+
+            li {
+                margin: 10px 0;
+                text-align: center;
+            }
+
+            a {
+                text-decoration: none;
+                color: #007bff;
+            }
+
+            a:hover {
+                text-decoration: underline;
+            }
+
+            .card {
+                padding: 20px;
+                margin: 10px 0;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                background-color: #fafafa;
+            }
+
+            .card a {
+                font-size: 18px;
+                color: #007bff;
+            }
+
+            .card a:hover {
+                text-decoration: underline;
+            }
+
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <h1>
+                <%= title %>
+            </h1>
+            <p>
+                <%= description %>
+            </p>
+            <ul>
+                <% routes.forEach(route=> { %>
+                    <li class="card">
+                        <a href="<%= route.path %>">
+                            <%= route.label %>
+                        </a>
+                    </li>
+                    <% }) %>
+            </ul>
+        </div>
+    </body>
+
+</html>

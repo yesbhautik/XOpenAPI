@@ -1,6 +1,12 @@
 const { Rettiwt } = require("rettiwt-api");
 const RSS = require("rss");
-const { apiKey } = require("../config/config");
+const {
+  apiKey,
+  language,
+  minLikes,
+  minReplies,
+  minRetweets,
+} = require("../config/config");
 
 const rettiwt = new Rettiwt({ apiKey });
 
@@ -11,10 +17,10 @@ exports.strictSearchTweets = async (req, res) => {
       includePhrase: keyword,
       count: 1,
       result_type: "recent",
-      language: "en",
-      // minLikes: 1000,
-      // minReplies: 100,
-      // minRetweets: 100,
+      language,
+      minLikes,
+      minReplies,
+      minRetweets,
     });
 
     if (!tweets.list || tweets.list.length === 0) {
@@ -78,10 +84,10 @@ exports.strictSearchTweetsFeed = async (req, res) => {
       includePhrase: keyword,
       count: 1,
       result_type: "recent",
-      language: "en",
-      // minLikes: 1000,
-      // minReplies: 100,
-      // minRetweets: 100,
+      language,
+      minLikes,
+      minReplies,
+      minRetweets,
     });
 
     if (!tweets.list || tweets.list.length === 0) {

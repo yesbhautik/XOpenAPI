@@ -1,6 +1,12 @@
 const { Rettiwt } = require("rettiwt-api");
 const RSS = require("rss");
-const { apiKey } = require("../config/config");
+const {
+  apiKey,
+  language,
+  minLikes,
+  minReplies,
+  minRetweets,
+} = require("../config/config");
 
 const rettiwt = new Rettiwt({ apiKey });
 
@@ -18,9 +24,10 @@ exports.getUserLatestTweet = async (req, res) => {
       fromUsers: [userDetails.userName],
       count: 1,
       result_type: "recent",
-      // minLikes: 1000,
-      // minReplies: 100,
-      // minRetweets: 100,
+      // language,
+      minLikes,
+      minReplies,
+      minRetweets,
     });
 
     // Log the user's tweets to debug
@@ -60,9 +67,10 @@ exports.getUserLatestTweetFeed = async (req, res) => {
       fromUsers: [userDetails.userName],
       count: 1,
       result_type: "recent",
-      // minLikes: 1000,
-      // minReplies: 100,
-      // minRetweets: 100,
+      // language,
+      minLikes,
+      minReplies,
+      minRetweets,
     });
 
     // Log the user's tweets to debug
