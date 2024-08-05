@@ -1,12 +1,8 @@
 import streamlit as st
 import os
-from dotenv import load_dotenv
-
-# Load environment variables from .env file
-load_dotenv()
 
 # Get the BASE_URL value
-base_url = os.getenv('BASE_URL')
+base_url = st.secrets["SL_URL"]
 
 
 def generate_url(function, params, response_format):
