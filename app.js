@@ -1,5 +1,7 @@
 const express = require("express");
-const { port } = require("./config/config");
+const { port, baseurl } = require("./config/config");
+const { exec } = require("child_process");
+
 const app = express();
 
 const searchRoutes = require("./routes/search");
@@ -16,34 +18,22 @@ app.use(strictSearchRoutes);
 app.use(hashtagRoutes);
 app.use(usernameLatestRoutes);
 
-app.get("/", (req, res) => {
-  const routes = [
-    { path: "/search/alonmusk", label: "Search Tweets" },
-    { path: "/search/alonmusk/feed", label: "Search Tweets Feed" },
-    { path: "/strict-search/alonmusk", label: "Strict Search Tweets" },
-    {
-      path: "/strict-search/alonmusk/feed",
-      label: "Strict Search Tweets Feed",
-    },
-    { path: "/hashtag/alonmusk", label: "Hashtag Tweets" },
-    { path: "/hashtag/alonmusk/feed", label: "Hashtag Tweets Feed" },
-    {
-      path: "/profile-information/alonmusk",
-      label: "User Profile Information",
-    },
-    {
-      path: "/profile-information/alonmusk/feed",
-      label: "User Profile Information Feed",
-    },
-    { path: "/latest-tweet/alonmusk", label: "User's Latest Tweet" },
-    { path: "/latest-tweet/alonmusk/feed", label: "User's Latest Tweet Feed" },
-  ];
+// Start the Streamlit app
+exec("streamlit run ./tools/urlCreator.py", (err, stdout, stderr) => {
+  if (err) {
+    console.error(`Error executing Streamlit: ${err}`);
+    return;
+  }
+  console.log(`Streamlit stdout: ${stdout}`);
+  console.error(`Streamlit stderr: ${stderr}`);
+});
 
-  res.render("index", {
-    title: "TwitterOpenAPI",
-    description: "Explore the predefined API outputs:",
-    routes,
-  });
+// Add a new route to show the Streamlit URL
+app.get("/", (req, res) => {
+  res.send(`
+    <h1>Welcome to the XOpenAPI.</h1>
+    <p>Get URL generator & examples at <a href="${baseurl}" target="_blank">${baseurl}</a></p>
+  `);
 });
 
 app.listen(port, () => {
