@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-load_dotenv(dotenv_path='../.env')
+load_dotenv()
 
 # Get the BASE_URL value
 base_url = os.getenv('BASE_URL')
