@@ -1,5 +1,5 @@
 const express = require("express");
-const { port, baseurl } = require("./config/config");
+const { port, slurl } = require("./config/config");
 const { exec } = require("child_process");
 
 const app = express();
@@ -18,21 +18,10 @@ app.use(strictSearchRoutes);
 app.use(hashtagRoutes);
 app.use(usernameLatestRoutes);
 
-// Start the Streamlit app
-exec("streamlit run ./tools/urlCreator.py", (err, stdout, stderr) => {
-  if (err) {
-    console.error(`Error executing Streamlit: ${err}`);
-    return;
-  }
-  console.log(`Streamlit stdout: ${stdout}`);
-  console.error(`Streamlit stderr: ${stderr}`);
-});
-
-// Add a new route to show the Streamlit URL
 app.get("/", (req, res) => {
   res.send(`
     <h1>Welcome to the XOpenAPI.</h1>
-    <p>Get URL generator & examples at <a href="${baseurl}" target="_blank">${baseurl}</a></p>
+    <p>Get URL generator & examples at <a href="${slurl}" target="_blank">${slurl}</a></p>
   `);
 });
 
