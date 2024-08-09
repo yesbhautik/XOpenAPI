@@ -1,5 +1,7 @@
 const { Rettiwt } = require("rettiwt-api");
 const RSS = require("rss");
+const fs = require("fs");
+const path = require("path");
 const {
   apiKey,
   language,
@@ -180,6 +182,81 @@ exports.searchTweetsFeed = async (req, res) => {
 
     res.set("Content-Type", "application/rss+xml");
     res.send(feed.xml({ indent: true }));
+  } catch (error) {
+    console.error("Error fetching tweets:", error.message);
+    res.status(500).json({ error: error.message, details: error.details });
+  }
+};
+
+exports.randomSearchTweets = async (req, res) => {
+  const { minLikes, minReplies, minRetweets, language } = req.query;
+
+  try {
+    const keywordsPath = path.join(__dirname, "../keywords.json");
+    const keywordsData = fs.readFileSync(keywordsPath);
+    const keywords = JSON.parse(keywordsData).keywords;
+    const randomKeyword = keywords[Math.floor(Math.random() * keywords.length)];
+
+    const tweets = await rettiwt.tweet.search({
+      includeWords: [randomKeyword],
+      count: 1,
+      result_type: "recent",
+      language: language || "en",
+      minLikes: parseInt(minLikes, 10) || 0,
+      minReplies: parseInt(minReplies, 10) || 0,
+      minRetweets: parseInt(minRetweets, 10) || 0,
+    });
+
+    if (!tweets.list || tweets.list.length === 0) {
+      throw new Error("No tweets found");
+    }
+
+    const tweet = tweets.list[0];
+
+    res.json({
+      keyword: randomKeyword,
+      latestTweet: {
+        id: tweet.id,
+        createdAt: tweet.createdAt,
+        tweetBy: {
+          id: tweet.tweetBy.id,
+          userName: tweet.tweetBy.userName,
+          fullName: tweet.tweetBy.fullName,
+          createdAt: tweet.tweetBy.createdAt,
+          description: tweet.tweetBy.description,
+          isVerified: tweet.tweetBy.isVerified,
+          likeCount: tweet.tweetBy.likeCount,
+          followersCount: tweet.tweetBy.followersCount,
+          followingsCount: tweet.tweetBy.followingsCount,
+          statusesCount: tweet.tweetBy.statusesCount,
+          location: tweet.tweetBy.location,
+          profileBanner: tweet.tweetBy.profileBanner,
+          profileImage: tweet.tweetBy.profileImage,
+        },
+        entities: {
+          hashtags: tweet.entities.hashtags,
+          mentionedUsers: tweet.entities.mentionedUsers.map(
+            (user) => user.userName
+          ),
+          urls: tweet.entities.urls,
+        },
+        media: tweet.media
+          ? tweet.media.map((media) => ({
+              type: media.type,
+              url: media.url,
+            }))
+          : [],
+        fullText: tweet.fullText,
+        tweetURL: `https://twitter.com/${tweet.tweetBy.userName}/status/${tweet.id}`,
+        lang: tweet.lang,
+        quoteCount: tweet.quoteCount,
+        replyCount: tweet.replyCount,
+        retweetCount: tweet.retweetCount,
+        likeCount: tweet.likeCount,
+        viewCount: tweet.viewCount,
+        bookmarkCount: tweet.bookmarkCount,
+      },
+    });
   } catch (error) {
     console.error("Error fetching tweets:", error.message);
     res.status(500).json({ error: error.message, details: error.details });

@@ -1,5 +1,7 @@
 const { Rettiwt } = require("rettiwt-api");
 const RSS = require("rss");
+const fs = require("fs");
+const path = require("path");
 const {
   apiKey,
   language,
@@ -135,6 +137,39 @@ exports.getHashtagTweetsFeed = async (req, res) => {
 
     res.set("Content-Type", "application/rss+xml");
     res.send(feed.xml({ indent: true }));
+  } catch (error) {
+    console.error("Error fetching tweets:", error.message);
+    res.status(500).json({ error: error.message, details: error.details });
+  }
+};
+
+exports.randomHashtagTweets = async (req, res) => {
+  const { minLikes, minReplies, minRetweets, language } = req.query;
+
+  try {
+    const keywordsPath = path.join(__dirname, "../keywords.json");
+    const keywordsData = fs.readFileSync(keywordsPath);
+    const keywords = JSON.parse(keywordsData).hashtags;
+    const randomKeyword = keywords[Math.floor(Math.random() * keywords.length)];
+
+    const tweets = await rettiwt.tweet.search({
+      hashtags: [randomKeyword],
+      count: 1,
+      result_type: "recent",
+      language: language || "en",
+      minLikes: parseInt(minLikes, 10) || 0,
+      minReplies: parseInt(minReplies, 10) || 0,
+      minRetweets: parseInt(minRetweets, 10) || 0,
+    });
+
+    if (!tweets.list || tweets.list.length === 0) {
+      throw new Error("No tweets found");
+    }
+
+    res.json({
+      keyword: randomKeyword,
+      latestTweet: tweets.list[0],
+    });
   } catch (error) {
     console.error("Error fetching tweets:", error.message);
     res.status(500).json({ error: error.message, details: error.details });
