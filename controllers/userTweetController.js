@@ -12,6 +12,8 @@ const rettiwt = new Rettiwt({ apiKey });
 
 exports.getUserLatestTweet = async (req, res) => {
   const { username } = req.params;
+  const { minLikes, minReplies, minRetweets, language } = req.query;
+
   try {
     // Fetch the details of the user
     const userDetails = await rettiwt.user.details(username);
@@ -24,10 +26,10 @@ exports.getUserLatestTweet = async (req, res) => {
       fromUsers: [userDetails.userName],
       count: 1,
       result_type: "recent",
-      // language,
-      minLikes,
-      minReplies,
-      minRetweets,
+      language: language || "en",
+      minLikes: parseInt(minLikes, 10) || 0,
+      minReplies: parseInt(minReplies, 10) || 0,
+      minRetweets: parseInt(minRetweets, 10) || 0,
     });
 
     // Log the user's tweets to debug
@@ -55,6 +57,8 @@ exports.getUserLatestTweet = async (req, res) => {
 
 exports.getUserLatestTweetFeed = async (req, res) => {
   const { username } = req.params;
+  const { minLikes, minReplies, minRetweets, language } = req.query;
+
   try {
     // Fetch the details of the user
     const userDetails = await rettiwt.user.details(username);
@@ -67,10 +71,10 @@ exports.getUserLatestTweetFeed = async (req, res) => {
       fromUsers: [userDetails.userName],
       count: 1,
       result_type: "recent",
-      // language,
-      minLikes,
-      minReplies,
-      minRetweets,
+      language: language || "en",
+      minLikes: parseInt(minLikes, 10) || 0,
+      minReplies: parseInt(minReplies, 10) || 0,
+      minRetweets: parseInt(minRetweets, 10) || 0,
     });
 
     // Log the user's tweets to debug

@@ -8,4 +8,5 @@ module.exports = {
   minLikes: parseInt(process.env.MIN_LIKES),
   minReplies: parseInt(process.env.MIN_REPLIES),
   minRetweets: parseInt(process.env.MIN_RETWEETS),
+  slurl: process.env.SL_URL,
 };

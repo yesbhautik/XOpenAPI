@@ -12,15 +12,17 @@ const rettiwt = new Rettiwt({ apiKey });
 
 exports.searchTweets = async (req, res) => {
   const { keyword } = req.params;
+  const { minLikes, minReplies, minRetweets, language } = req.query;
+
   try {
     const tweets = await rettiwt.tweet.search({
       includeWords: [keyword],
       count: 1,
       result_type: "recent",
-      language,
-      minLikes,
-      minReplies,
-      minRetweets,
+      language: language || "en",
+      minLikes: parseInt(minLikes, 10) || 0,
+      minReplies: parseInt(minReplies, 10) || 0,
+      minRetweets: parseInt(minRetweets, 10) || 0,
     });
 
     if (!tweets.list || tweets.list.length === 0) {
@@ -81,15 +83,17 @@ exports.searchTweets = async (req, res) => {
 
 exports.searchTweetsFeed = async (req, res) => {
   const { keyword } = req.params;
+  const { minLikes, minReplies, minRetweets, language } = req.query;
+
   try {
     const tweets = await rettiwt.tweet.search({
       includeWords: [keyword],
       count: 1,
       result_type: "recent",
-      language,
-      minLikes,
-      minReplies,
-      minRetweets,
+      language: language || "en",
+      minLikes: parseInt(minLikes, 10) || 0,
+      minReplies: parseInt(minReplies, 10) || 0,
+      minRetweets: parseInt(minRetweets, 10) || 0,
     });
 
     if (!tweets.list || tweets.list.length === 0) {
