@@ -1,5 +1,7 @@
 const { Rettiwt } = require("rettiwt-api");
 const RSS = require("rss");
+const fs = require("fs");
+const path = require("path");
 const {
   apiKey,
   language,
@@ -168,6 +170,55 @@ exports.getUserLatestTweetFeed = async (req, res) => {
     res.set("Content-Type", "application/rss+xml");
     // Send the RSS feed as the response
     res.send(feed.xml({ indent: true }));
+  } catch (error) {
+    console.error("Error fetching latest tweet:", error.message);
+    if (error.details) {
+      console.error("Error details:", JSON.stringify(error.details, null, 2));
+    }
+    res.status(500).json({ error: error.message, details: error.details });
+  }
+};
+
+exports.randomUserLatestTweet = async (req, res) => {
+  const { minLikes, minReplies, minRetweets, language } = req.query;
+
+  try {
+    const keywordsPath = path.join(__dirname, "../keywords.json");
+    const keywordsData = fs.readFileSync(keywordsPath);
+    const users = JSON.parse(keywordsData).users;
+    const randomUser = users[Math.floor(Math.random() * users.length)];
+
+    // Fetch the details of the random user
+    const userDetails = await rettiwt.user.details(randomUser);
+
+    // Log the user details to debug
+    console.log("User Details:", JSON.stringify(userDetails, null, 2));
+
+    // Fetch the user's latest tweets using the search method
+    const userTweets = await rettiwt.tweet.search({
+      fromUsers: [userDetails.userName],
+      count: 1,
+      result_type: "recent",
+      language: language || "en",
+      minLikes: parseInt(minLikes, 10) || 0,
+      minReplies: parseInt(minReplies, 10) || 0,
+      minRetweets: parseInt(minRetweets, 10) || 0,
+    });
+
+    // Log the user's tweets to debug
+    console.log("User Tweets:", JSON.stringify(userTweets, null, 2));
+
+    // Check if userTweets.list is defined
+    if (!userTweets.list || userTweets.list.length === 0) {
+      throw new Error("No tweets found");
+    }
+
+    // Return the structured JSON response
+    res.json({
+      userDetails,
+      latestTweet: userTweets.list[0],
+      latestTweetURL: `https://twitter.com/${userDetails.userName}/status/${userTweets.list[0].id}`,
+    });
   } catch (error) {
     console.error("Error fetching latest tweet:", error.message);
     if (error.details) {
