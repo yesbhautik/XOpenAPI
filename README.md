@@ -1,4 +1,5 @@
 # TwitterOpenAPI | XOpenAPI
+
 <p>
 <img src="https://github.com/user-attachments/assets/a3a821a4-d615-4a1c-beca-7bca04a1dd18" style="width: 20%; border-radius: 20px">
 </p>
@@ -34,7 +35,7 @@ Milestones also will be added soon. Feel free to contribute.
     rettiwt auth login "<email>" "<username>" "<password>"
     ```
 
-    `Replace <email>`, `<username>`, and `<password>` with your email, username, and password. After run the command, you will get an API key string.
+    Replace `<email>`, `<username>`, and `<password>` with your email, username, and password. After running the command, you will get an API key string.
 
 ## Installation
 
@@ -81,31 +82,79 @@ The server will start on `http://localhost:3000`.
 
 - **GET** `/search/:keyword`
   - Description: Search for tweets containing the specified keyword.
+  - Query Parameters:
+    - `minLikes`: Minimum number of likes (optional).
+    - `minReplies`: Minimum number of replies (optional).
+    - `minRetweets`: Minimum number of retweets (optional).
+    - `language`: Language of the tweets (optional, default is "en").
   - Response: JSON object with the latest tweet containing the keyword.
 
 - **GET** `/search/:keyword/feed`
   - Description: Generate an RSS feed for the latest tweet containing the specified keyword.
+  - Query Parameters:
+    - `minLikes`: Minimum number of likes (optional).
+    - `minReplies`: Minimum number of replies (optional).
+    - `minRetweets`: Minimum number of retweets (optional).
+    - `language`: Language of the tweets (optional, default is "en").
   - Response: RSS feed in XML format.
+
+- **GET** `/random/search`
+  - Description: Search for tweets containing a random keyword from `keywords.json`.
+  - Query Parameters:
+    - `minLikes`: Minimum number of likes (optional).
+    - `minReplies`: Minimum number of replies (optional).
+    - `minRetweets`: Minimum number of retweets (optional).
+    - `language`: Language of the tweets (optional, default is "en").
+  - Response: JSON object with the latest tweet containing the random keyword.
 
 ### Strict Search Tweets
 
 - **GET** `/strict-search/:keyword`
   - Description: Strict search for tweets containing the specified keyword.
+  - Query Parameters:
+    - `minLikes`: Minimum number of likes (optional).
+    - `minReplies`: Minimum number of replies (optional).
+    - `minRetweets`: Minimum number of retweets (optional).
+    - `language`: Language of the tweets (optional, default is "en").
   - Response: JSON object with the latest tweet containing the keyword.
 
 - **GET** `/strict-search/:keyword/feed`
   - Description: Generate an RSS feed for the latest tweet containing the specified keyword.
+  - Query Parameters:
+    - `minLikes`: Minimum number of likes (optional).
+    - `minReplies`: Minimum number of replies (optional).
+    - `minRetweets`: Minimum number of retweets (optional).
+    - `language`: Language of the tweets (optional, default is "en").
   - Response: RSS feed in XML format.
 
 ### Hashtag Tweets
 
 - **GET** `/hashtag/:keyword`
   - Description: Search for tweets containing the specified hashtag.
+  - Query Parameters:
+    - `minLikes`: Minimum number of likes (optional).
+    - `minReplies`: Minimum number of replies (optional).
+    - `minRetweets`: Minimum number of retweets (optional).
+    - `language`: Language of the tweets (optional, default is "en").
   - Response: JSON object with the latest tweet containing the hashtag.
 
 - **GET** `/hashtag/:keyword/feed`
   - Description: Generate an RSS feed for the latest tweet containing the specified hashtag.
+  - Query Parameters:
+    - `minLikes`: Minimum number of likes (optional).
+    - `minReplies`: Minimum number of replies (optional).
+    - `minRetweets`: Minimum number of retweets (optional).
+    - `language`: Language of the tweets (optional, default is "en").
   - Response: RSS feed in XML format.
+
+- **GET** `/random/hashtag`
+  - Description: Search for tweets containing a random hashtag from `keywords.json`.
+  - Query Parameters:
+    - `minLikes`: Minimum number of likes (optional).
+    - `minReplies`: Minimum number of replies (optional).
+    - `minRetweets`: Minimum number of retweets (optional).
+    - `language`: Language of the tweets (optional, default is "en").
+  - Response: JSON object with the latest tweet containing the random hashtag.
 
 ### User Profile Information
 
@@ -121,11 +170,30 @@ The server will start on `http://localhost:3000`.
 
 - **GET** `/latest-tweet/:username`
   - Description: Get the latest tweet of the specified user.
+  - Query Parameters:
+    - `minLikes`: Minimum number of likes (optional).
+    - `minReplies`: Minimum number of replies (optional).
+    - `minRetweets`: Minimum number of retweets (optional).
+    - `language`: Language of the tweets (optional, default is "en").
   - Response: JSON object with the user's latest tweet.
 
 - **GET** `/latest-tweet/:username/feed`
   - Description: Generate an RSS feed for the user's latest tweet.
+  - Query Parameters:
+    - `minLikes`: Minimum number of likes (optional).
+    - `minReplies`: Minimum number of replies (optional).
+    - `minRetweets`: Minimum number of retweets (optional).
+    - `language`: Language of the tweets (optional, default is "en").
   - Response: RSS feed in XML format.
+
+- **GET** `/random/user-latest`
+  - Description: Get the latest tweet of a random user from `keywords.json`.
+  - Query Parameters:
+    - `minLikes`: Minimum number of likes (optional).
+    - `minReplies`: Minimum number of replies (optional).
+    - `minRetweets`: Minimum number of retweets (optional).
+    - `language`: Language of the tweets (optional, default is "en").
+  - Response: JSON object with the latest tweet of the random user.
 
 ## Project Structure
 
@@ -162,6 +230,7 @@ TwitterOpenAPI/
 - **searchController.js**: Handles search-related requests.
   - `searchTweets`: Fetches tweets containing the specified keyword.
   - `searchTweetsFeed`: Generates an RSS feed for the latest tweet containing the specified keyword.
+  - `randomSearchTweets`: Fetches tweets containing a random keyword from `keywords.json`.
 
 - **profileInfoController.js**: Handles profile information-related requests.
   - `getProfileInfo`: Fetches profile information of the specified user.
@@ -174,21 +243,19 @@ TwitterOpenAPI/
 - **hashtagController.js**: Handles hashtag-related requests.
   - `getHashtagTweets`: Fetches tweets containing the specified hashtag.
   - `getHashtagTweetsFeed`: Generates an RSS feed for the latest tweet containing the specified hashtag.
+  - `randomHashtagTweets`: Fetches tweets containing a random hashtag from `keywords.json`.
 
 - **userTweetController.js**: Handles user tweet-related requests.
   - `getUserLatestTweet`: Fetches the latest tweet of the specified user.
   - `getUserLatestTweetFeed`: Generates an RSS feed for the user's latest tweet.
+  - `randomUserLatestTweet`: Fetches the latest tweet of a random user from `keywords.json`.
 
 ### Routes
 
-- **search.js**: Defines routes for search-related requests
-
+- **search.js**: Defines routes for search-related requests.
 - **profile-info.js**: Defines routes for profile information-related requests.
-
 - **strict-search.js**: Defines routes for strict search-related requests.
-
 - **hashtag.js**: Defines routes for hashtag-related requests.
-
 - **username-latest.js**: Defines routes for user tweet-related requests.
 
 ## Contributing
